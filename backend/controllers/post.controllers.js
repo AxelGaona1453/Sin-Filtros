@@ -2,7 +2,7 @@ import { CommentModel } from "../models/comment.model.js"
 import { PostModel } from "../models/post.model.js"
 import { matchedData } from "express-validator"
 import { UserModel } from "../models/user.model.js"
-import { matchedData } from "express-validator"
+
 
 export const createPost = async (req, res) => {
     const data = matchedData(req);
