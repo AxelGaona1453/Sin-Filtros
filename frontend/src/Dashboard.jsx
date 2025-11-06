@@ -1,96 +1,165 @@
-import React from 'react';
-import './Dashboard.css'; // Importamos los estilos
+import React, { useState } from 'react';
+import './dashboard.css';
+import { useNavigate } from 'react-router';
 
-// --- Componente Header (Encabezado) ---
-const Header = () => {
+function AuthForm() {
+	const [isLoginView, setIsLoginView] = useState(true);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [name, setName] = useState('');
+	const [msg, setMsg] = useState('');
+	const [loading, setLoading] = useState(false);
+
+	// Usa useNavigate en lugar de window.location.href
+	const navigate = useNavigate();
+
+	const toggleView = () => {
+		setIsLoginView(!isLoginView);
+		setName('');
+		setEmail('');
+		setPassword('');
+		setMsg('');
+	};
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		setLoading(true);
+		setMsg('');
+
+		try {
+			if (isLoginView) {
+				// Lógica de Login
+				const loginData = {
+					email: email,
+					password: password,
+				};
+
+				console.log('Objeto de Login:', loginData);
+
+				const response = await fetch('http://localhost:3000/api/auth/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(loginData),
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					setMsg(' ¡Login exitoso! Redirigiendo...');
+					console.log('Respuesta del servidor:', data);
+
+					// Guardar el token en localStorage si viene en la respuesta
+					if (data.token) {
+						localStorage.setItem('token', data.token);
+					}
+
+					// Redirigir usando navigate
+					setTimeout(() => {
+						navigate('/dashboard');
+					}, 1500);
+				} else {
+					setMsg(`Error: ${data.msg || 'Credenciales incorrectas'}`);
+				}
+			} else {
+				// Lógica de Registro
+				const userData = {
+					email: email,
+					password: password,
+					nombre: name,
+				};
+
+				console.log('Objeto de Registro:', userData);
+
+				const response = await fetch('http://localhost:3000/api/auth/register', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(userData),
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					setMsg(' ¡Usuario registrado exitosamente!');
+					console.log('Respuesta del servidor:', data);
+					setTimeout(() => setIsLoginView(true), 2000);
+				} else {
+					setMsg(` Error: ${data.msg || 'Error en el registro'}`);
+				}
+			}
+		} catch (error) {
+			console.error('Error en la petición:', error);
+			setMsg(' Error de conexión con el servidor');
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
-		<header className="dashboard-header">
-			<h1>Panel de Control</h1>
-			<div className="user-info">
-				<span>Usuario: Admin</span>
-			</div>
-		</header>
-	);
-};
-
-// --- Componente Sidebar (Barra Lateral) ---
-const Sidebar = () => {
-	return (
-		<aside className="dashboard-sidebar">
-			<div className="sidebar-logo">
-				<h2>Mi App</h2>
-			</div>
-			<nav className="sidebar-nav">
-				<ul>
-					<li className="active">
-						<a href="#inicio">Inicio</a>
-					</li>
-					<li>
-						<a href="#estadisticas">Estadísticas</a>
-					</li>
-					<li>
-						<a href="#reportes">Reportes</a>
-					</li>
-					<li>
-						<a href="#usuarios">Usuarios</a>
-					</li>
-					<li>
-						<a href="#config">Configuración</a>
-					</li>
-				</ul>
-			</nav>
-		</aside>
-	);
-};
-
-// --- Componente MainContent (Contenido Principal) ---
-const MainContent = () => {
-	return (
-		<main className="dashboard-main">
-			<h2>Resumen General</h2>
-
-			{/* Contenedor de tarjetas */}
-			<div className="dashboard-cards">
-				<div className="card">
-					<h3>Ventas Totales</h3>
-					<p>$125,430</p>
-					<span className="card-info">+12% vs mes anterior</span>
+		<div className="auth-container">
+			<form className="auth-form" onSubmit={handleSubmit}>
+				<h2>{isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
+				{msg && (
+					<div className={`msg ${msg.includes('✅') ? 'success' : 'error'}`}>{msg}</div>
+				)}
+				{!isLoginView && (
+					<>
+						<div className="input-group">
+							<label htmlFor="name">Nombre</label>
+							<input
+								type="text"
+								id="name"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								required
+								disabled={loading}
+							/>
+						</div>
+					</>
+				)}
+				<div className="input-group">
+					<label htmlFor="email">Correo Electrónico</label>
+					<input
+						type="email"
+						id="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+						disabled={loading}
+					/>
+				</div>
+				<div className="input-group">
+					<label htmlFor="password">Contraseña</label>
+					<input
+						type="password"
+						id="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+						disabled={loading}
+					/>
 				</div>
 
-				<div className="card">
-					<h3>Usuarios Activos</h3>
-					<p>4,820</p>
-					<span className="card-info">+5.2% vs mes anterior</span>
+				<button type="submit" className="auth-button" disabled={loading}>
+					{loading ? 'Cargando...' : isLoginView ? 'Ingresar' : 'Registrarse'}
+				</button>
+				<div className="toggle-view">
+					{isLoginView ? (
+						<p>
+							¿No tienes una cuenta? <span onClick={toggleView}>Regístrate</span>
+						</p>
+					) : (
+						<p>
+							¿Ya tienes una cuenta? <span onClick={toggleView}>Inicia Sesión</span>
+						</p>
+					)}
 				</div>
-
-				<div className="card">
-					<h3>Nuevos Pedidos</h3>
-					<p>1,150</p>
-					<span className="card-info">-1.5% vs mes anterior</span>
-				</div>
-			</div>
-
-			{/* Aquí podrías agregar más componentes como tablas o gráficos */}
-			<div className="more-content">
-				<h3>Actividad Reciente</h3>
-				<p>Aquí iría una tabla o un gráfico de actividad...</p>
-			</div>
-		</main>
-	);
-};
-
-// --- Componente Principal del Dashboard ---
-// Este componente une el Sidebar, Header y MainContent
-const Dashboard = () => {
-	return (
-		<div className="dashboard-container">
-			<Sidebar />
-			<div className="dashboard-content-area">
-				<Header />
-				<MainContent />
-			</div>
+			</form>
 		</div>
 	);
-};
+}
 
-export default Dashboard;
+export default AuthForm;

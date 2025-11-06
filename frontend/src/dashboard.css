@@ -1,140 +1,117 @@
-/* --- Estilos Generales --- */
-body {
-	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-		Arial, sans-serif;
-	background-color: #f4f7f6;
+/* AuthForm.css */
+/* ... (todos los estilos anteriores de LoginForm.css siguen aquí) ... */
+
+.auth-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 20px;
+	background-color: #f0f2f5;
+	font-family: sans-serif;
+	box-sizing: border-box;
+}
+
+.auth-form {
+	padding: 2rem;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 400px;
+}
+
+.auth-form h2 {
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+	text-align: center;
 	color: #333;
 }
 
-/* --- Layout Principal del Dashboard --- */
-.dashboard-container {
-	display: grid;
-	/* Define 2 columnas: 240px para el sidebar, 1fr (resto) para el contenido */
-	grid-template-columns: 240px 1fr;
-	height: 100vh; /* Ocupa toda la altura de la pantalla */
+.input-group {
+	margin-bottom: 1rem;
 }
 
-.dashboard-content-area {
-	display: flex;
-	flex-direction: column;
-	overflow-y: auto; /* Permite scroll si el contenido es muy largo */
-}
-
-/* --- 1. Estilos del Sidebar (Barra Lateral) --- */
-.dashboard-sidebar {
-	background-color: #2c3e50; /* Azul oscuro */
-	color: white;
-	padding: 20px;
-	display: flex;
-	flex-direction: column;
-}
-
-.sidebar-logo {
-	text-align: center;
-	margin-bottom: 30px;
-	font-size: 1.5em;
-	color: #1abc9c; /* Verde menta */
-}
-
-.sidebar-nav ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.sidebar-nav li {
-	margin-bottom: 10px;
-}
-
-.sidebar-nav a {
-	color: white;
-	text-decoration: none;
+.input-group label {
 	display: block;
-	padding: 12px 15px;
-	border-radius: 6px;
-	font-size: 1.1em;
-	transition: background-color 0.3s, color 0.3s;
+	margin-bottom: 0.5rem;
+	color: #555;
+	font-weight: bold;
 }
 
-.sidebar-nav a:hover,
-.sidebar-nav li.active a {
-	background-color: #1abc9c;
-	color: #2c3e50;
+.input-group input {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
 }
 
-/* --- 2. Estilos del Header (Encabezado) --- */
-.dashboard-header {
-	background-color: #ffffff;
-	padding: 20px;
-	border-bottom: 1px solid #e0e0e0;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+.auth-button {
+	width: 100%;
+	padding: 0.75rem;
+	border: none;
+	border-radius: 4px;
+	background-color: #007bff;
+	color: white;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
-.dashboard-header h1 {
-	margin: 0;
-	font-size: 1.8em;
+.auth-button:hover {
+	background-color: #0056b3;
 }
 
-.user-info {
-	font-weight: 600;
-}
-
-/* --- 3. Estilos del MainContent (Contenido Principal) --- */
-.dashboard-main {
-	padding: 30px;
-}
-
-.dashboard-main h2 {
-	font-size: 1.6em;
-	margin-top: 0;
-}
-
-/* Contenedor de Tarjetas */
-.dashboard-cards {
-	display: grid;
-	/* Crea columnas responsivas: se ajustan automáticamente */
-	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-	gap: 25px; /* Espacio entre tarjetas */
-	margin-bottom: 30px;
-}
-
-/* Estilo de cada Tarjeta */
-.card {
-	background-color: #ffffff;
-	border-radius: 10px;
-	padding: 25px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-	transition: transform 0.2s;
-}
-
-.card:hover {
-	transform: translateY(-5px);
-}
-
-.card h3 {
-	margin-top: 0;
-	font-size: 1.2em;
+/* --- NUEVA SECCIÓN --- */
+.toggle-view {
+	text-align: center;
+	margin-top: 1rem;
+	font-size: 0.9rem;
 	color: #555;
 }
 
-.card p {
-	font-size: 2.2em;
-	font-weight: 700;
-	margin: 10px 0;
-	color: #2c3e50;
+.toggle-view span {
+	color: #007bff;
+	cursor: pointer;
+	font-weight: bold;
 }
 
-.card-info {
-	font-size: 0.9em;
-	color: #1abc9c;
+.toggle-view span:hover {
+	text-decoration: underline;
 }
 
-.more-content {
-	background-color: #ffffff;
-	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+.home-link {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	color: #2c7da0;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.3s ease;
+}
+
+.home-link:hover {
+	color: #1d5d7a;
+	text-decoration: underline;
+	transform: translateX(-3px);
+}
+
+.auth-input {
+	padding: 12px 15px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+
+	box-sizing: border-box;
+
+	background-color: #f8f8f8;
+	margin-top: 5px;
+	transition: border-color 0.3s ease;
+}
+.auth-input:focus {
+	outline: none;
+	border-color: #007bff;
 }
