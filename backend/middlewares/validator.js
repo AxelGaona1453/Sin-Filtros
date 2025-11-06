@@ -1,10 +1,10 @@
-import { validationResult } from "express-validator";
+import { validationResult } from 'express-validator';
 
 export const applyValidations = async (req, res, next) => {
-    const result = validationResult(req);
+	const result = validationResult(req);
 
-    if (!result.isEmpty()) {
-        return res.status(400).json({ errors: result.array() });
-    }
-    next();
+	if (!result.isEmpty()) {
+		return res.status(400).json({ msg: result.array() });
+	}
+	next();
 };
