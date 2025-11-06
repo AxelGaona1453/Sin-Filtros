@@ -95,7 +95,7 @@ function AuthForm() {
 					console.log('Respuesta del servidor:', data);
 					setTimeout(() => setIsLoginView(true), 2000);
 				} else {
-					const error = data.msg?.[0]?.msg;
+					const error = data.msg?.[0]?.msg || data.msg;
 					setMsg(` Error: ${error}`);
 					console.log(data.msg);
 				}
