@@ -7,7 +7,7 @@ const PostSchema = new Schema(
             ref: "User",
             required: true,
         },
-        caption: {
+        description: {
             type: String,
             required: true,
             trim: true,
