@@ -1,13 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from '../pages/LoginPage';
+import { Route, BrowserRouter as Router, Routes } from 'react-router';
+import AuthForm from './pages/Loginpage';
+import './style/Login.css';
 
 function App() {
 	return (
 		<Router>
 			<div className="App">
 				<Routes>
-					<Route path="/" element={<Dashboard />} />
+					<Route path="/" element={<AuthForm />} />
 				</Routes>
 			</div>
 		</Router>
