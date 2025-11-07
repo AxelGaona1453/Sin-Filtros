@@ -62,3 +62,35 @@ export const validatePostById = [
         })
 ];
 
+export const updatePostValidator = [
+    body("description")
+        .optional() // El usuario no está obligado a enviarlo
+        .notEmpty()
+        .withMessage("La descripción no puede estar vacía")
+        .trim(),
+
+    body("images")
+        .optional() // El usuario no está obligado a enviar imágenes
+        .isArray()
+        .withMessage("Las imágenes deben ser un array"),
+
+    // Valida cada URL dentro del array "images"
+    body("images.*.url")
+        .notEmpty()
+        .withMessage("La URL de la imagen no puede estar vacía")
+        .isURL()
+        .withMessage("La URL de la imagen debe ser válida"),
+
+    body("tags")
+        .optional() // El usuario no está obligado a enviar tags
+        .isArray()
+        .withMessage("Los tags deben ser un array"),
+
+    // Valida cada string dentro del array "tags"
+    body("tags.*")
+        .notEmpty()
+        .withMessage("El tag no puede estar vacío")
+        .isString()
+        .withMessage("Cada tag debe ser texto")
+        .trim()
+];
