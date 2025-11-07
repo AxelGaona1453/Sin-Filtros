@@ -8,7 +8,7 @@ export const registerValidations = [
     .withMessage("El nombre de usuario es obligatorio")
     .isLength({ min: 3, max: 20 })
     .withMessage("El nombre de usuario debe tener entre 3 y 20 caracteres")
-    .isAlphanumeric() 
+    .isAlphanumeric()
     .withMessage("El nombre de usuario debe ser alfanumérico")
     .custom(async (username) => {
       const usernameExists = await UserModel.findOne({ username: username });
@@ -16,7 +16,6 @@ export const registerValidations = [
         throw new Error("El nombre de usuario ya está en uso");
       }
     }),
-
   body("email")
     .notEmpty()
     .withMessage("El email es obligatorio")
@@ -28,7 +27,6 @@ export const registerValidations = [
         throw new Error("El email ya está en uso");
       }
     }),
-
   body("password")
     .notEmpty()
     .withMessage("La contraseña es obligatoria")
@@ -38,26 +36,22 @@ export const registerValidations = [
     .withMessage(
       "La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número"
     ),
-
   body("profile.firstname")
     .notEmpty()
     .withMessage("El nombre es obligatorio")
     .isLength({ min: 2, max: 50 })
     .withMessage("El nombre debe tener entre 2 y 50 caracteres")
     .trim(),
-
   body("profile.lastname")
     .notEmpty()
     .withMessage("El apellido es obligatorio")
     .isLength({ min: 2, max: 50 })
     .withMessage("El apellido debe tener entre 2 y 50 caracteres")
     .trim(),
-
   body("profile.profile_picture")
     .optional()
     .isURL()
     .withMessage("La URL de la imagen de perfil debe ser válida"),
-
   body("profile.biography")
     .optional()
     .isLength({ max: 500 })
@@ -87,7 +81,7 @@ export const updateAuthProfileValidations = [
     .optional()
     .isURL()
     .withMessage("La URL de la imagen de perfil debe ser válida"),
-    
+
   body("profile.biography")
     .optional()
     .isLength({ max: 500 })
