@@ -59,9 +59,11 @@ export const getPostById = async (req, res) => {
         const post = await PostModel.findById(id)
             .populate('author', 'username profile.profile_picture')
             .populate({
-                path: "author",
-                model: "User",
-                select: "username profile.profile_picture"
+                path: "comments",
+                populate: {
+                    path: "author",
+                    select: "username profile.profile_picture"
+                }
             });
 
         if (!post) {
@@ -130,17 +132,17 @@ export const toggleLike = async (req, res) => {
 
 export const createComment = async (req, res) => {
     const data = matchedData(req);
-    const { postId } = req.params;
+    const { id } = req.params;
     const userId = req.usuarioLogueado.id;
     try {
         const newComment = await CommentModel.create({
             text: data.text,
             author: userId,
-            post: postId
+            post: id
         })
 
         await PostModel.updateOne(
-            { _id: postId },
+            { _id: id },
             { $push: { comments: newComment._id } }
         );
 
@@ -162,10 +164,10 @@ export const createComment = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-    const { postId } = req.params;
+    const { id } = req.params;
     const userId = req.usuarioLogueado.id;
     try {
-        const post = await PostModel.findById(postId);
+        const post = await PostModel.findById(id);
         if (!post) {
             return res.status(404).json({
                 ok: false,
@@ -180,11 +182,11 @@ export const deletePost = async (req, res) => {
         }
 
         await post.deleteOne();
-        await CommentModel.deleteMany({ post: postId });
+        await CommentModel.deleteMany({ post: id });
 
         await UserModel.updateMany(
-            { saved_posts: postId },
-            { $pull: { saved_posts: postId } }
+            { saved_posts: id },
+            { $pull: { saved_posts: id } }
         );
 
         res.status(200).json({
@@ -197,5 +199,53 @@ export const deletePost = async (req, res) => {
             msg: "Error al eliminar el post",
             error: err.message
         })
+    }
+}
+
+export const updatePost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.usuarioLogueado.id;
+        const data = matchedData(req);
+
+        if (Object.keys(data).length === 0) {
+            return res.status(400).json({
+                ok: false,
+                msg: "Sin datos para actualizar",
+            });
+        }
+
+        const post = await PostModel.findById(id);
+        if (!post) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Post no encontrado"
+            });
+        }
+
+        if (post.author.toString() !== userId) {
+            return res.status(403).json({
+                ok: false,
+                msg: "No tienes permisos para actualizar este post"
+            });
+        }
+
+        const updatedPost = await PostModel.findByIdAndUpdate(
+            id,
+            { $set: data },
+            { new: true }
+        ).populate('author', 'username profile.profile_picture');
+
+        res.status(200).json({
+            ok: true,
+            msg: "Post actualizado correctamente",
+            post: updatedPost
+        });
+    } catch (err) {
+        res.status(500).json({
+            ok: false,
+            msg: "Error al actualizar el post",
+            error: err.message
+        });
     }
 }
