@@ -19,7 +19,7 @@ const MOCK_POSTS = [
 	},
 	{
 		id: 2,
-		author: 'LucíaG',
+		author: 'Sandra89',
 		avatar: img2,
 		text: 'Les comparto una foto de mi caminata de hoy. Reemplacé el pucho de la tarde por esto. ¡Un antes y un después!',
 		image: 'https://via.placeholder.com/600x400.png?text=Parque+Verde',

@@ -61,7 +61,7 @@ function AuthForm() {
 
 					// Redirigir usando navigate
 					setTimeout(() => {
-						navigate('/dashboard');
+						navigate('/community');
 					}, 1500);
 				} else {
 					setMsg(`Error: ${data.msg || 'Credenciales incorrectas'}`);
