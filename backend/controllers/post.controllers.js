@@ -191,6 +191,11 @@ export const deletePost = async (req, res) => {
             });
         }
 
+        if (post.images && post.images.length > 0) {
+            console.log("Eliminando imagen asociada")
+            await deleteFileByUrl(post.images[0].url);
+            console.log("Imagen eliminada de cloudinary")
+        }
         await post.deleteOne();
         await CommentModel.deleteMany({ post: id });
 
