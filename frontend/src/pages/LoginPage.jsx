@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
-import './dashboard.css';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import '../style/Login.css';
 
 function AuthForm() {
 	const [isLoginView, setIsLoginView] = useState(true);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [name, setName] = useState('');
+	const [username, setUsername] = useState('');
 	const [msg, setMsg] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [lastname, setLastname] = useState('');
+	const [firstname, setFirstname] = useState('');
 
 	// Usa useNavigate en lugar de window.location.href
 	const navigate = useNavigate();
 
 	const toggleView = () => {
 		setIsLoginView(!isLoginView);
-		setName('');
+		setUsername('');
+		setLastname('');
 		setEmail('');
 		setPassword('');
 		setMsg('');
@@ -42,6 +45,7 @@ function AuthForm() {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify(loginData),
+					credentials: 'include',
 				});
 
 				const data = await response.json();
@@ -65,14 +69,18 @@ function AuthForm() {
 			} else {
 				// Lógica de Registro
 				const userData = {
+					username: username,
 					email: email,
 					password: password,
-					nombre: name,
+					profile: {
+						firstname: firstname,
+						lastname: lastname,
+					},
 				};
 
 				console.log('Objeto de Registro:', userData);
 
-				const response = await fetch('http://localhost:3000/api/auth/register', {
+				const response = await fetch('http://localhost:3000/sin-filtros/auth/register', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -87,11 +95,13 @@ function AuthForm() {
 					console.log('Respuesta del servidor:', data);
 					setTimeout(() => setIsLoginView(true), 2000);
 				} else {
-					setMsg(` Error: ${data.msg || 'Error en el registro'}`);
+					const error = data.msg?.[0]?.msg || data.msg;
+					setMsg(` Error: ${error}`);
+					console.log(data.msg);
 				}
 			}
-		} catch (error) {
-			console.error('Error en la petición:', error);
+		} catch (err) {
+			console.error('Error en la petición:', err);
 			setMsg(' Error de conexión con el servidor');
 		} finally {
 			setLoading(false);
@@ -108,18 +118,49 @@ function AuthForm() {
 				{!isLoginView && (
 					<>
 						<div className="input-group">
-							<label htmlFor="name">Nombre</label>
+							<label htmlFor="name">Username</label>
 							<input
 								type="text"
-								id="name"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
+								id="username"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
 								required
 								disabled={loading}
 							/>
 						</div>
 					</>
 				)}
+				{!isLoginView && (
+					<>
+						<div className="input-group">
+							<label htmlFor="name">Nombre</label>
+							<input
+								type="text"
+								id="username"
+								value={firstname}
+								onChange={(e) => setFirstname(e.target.value)}
+								required
+								disabled={loading}
+							/>
+						</div>
+					</>
+				)}
+				{!isLoginView && (
+					<>
+						<div className="input-group">
+							<label htmlFor="lastname">Apellido</label>
+							<input
+								type="text"
+								id="lastname"
+								value={lastname}
+								onChange={(e) => setLastname(e.target.value)}
+								required
+								disabled={loading}
+							/>
+						</div>
+					</>
+				)}
+
 				<div className="input-group">
 					<label htmlFor="email">Correo Electrónico</label>
 					<input
