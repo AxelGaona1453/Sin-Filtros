@@ -2,15 +2,25 @@ import { CommentModel } from "../models/comment.model.js"
 import { PostModel } from "../models/post.model.js"
 import { matchedData } from "express-validator"
 import { UserModel } from "../models/user.model.js"
+import { uploadFromBuffer,deleteFileByUrl } from "../helpers/cloudinary.helper.js"
 
 
 export const createPost = async (req, res) => {
     const data = matchedData(req);
     const userId = req.usuarioLogueado.id
+
+    let imageArray = [];
+
     try {
+        if (req.file) {
+            const result = await uploadFromBuffer(req.file.buffer);
+            imageArray.push({ url: result.secure_url });
+        };
+
         const newPost = await PostModel.create({
             ...data,
-            author: userId
+            author: userId,
+            images: imageArray
         })
         // Agregar el post al usuario
         await UserModel.updateOne(
@@ -208,7 +218,7 @@ export const updatePost = async (req, res) => {
         const userId = req.usuarioLogueado.id;
         const data = matchedData(req);
 
-        if (Object.keys(data).length === 0) {
+        if (Object.keys(data).length === 0 && !req.file) {
             return res.status(400).json({
                 ok: false,
                 msg: "Sin datos para actualizar",
@@ -229,6 +239,17 @@ export const updatePost = async (req, res) => {
                 msg: "No tienes permisos para actualizar este post"
             });
         }
+
+        data.images = post.images;
+        if (req.file) {
+            if (post.images && post.images.length > 0 && post.images[0].url) {
+                console.log("Eliminando la imagen anterior")
+                await deleteFileByUrl(post.images[0].url)
+            }
+            const result = await uploadFromBuffer(req.file.buffer);
+            data.images = [{ url: result.secure_url }]
+        }
+
 
         const updatedPost = await PostModel.findByIdAndUpdate(
             id,
