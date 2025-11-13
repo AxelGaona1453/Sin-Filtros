@@ -23,7 +23,7 @@ function CreatePostForm({ onNewPost }) {
 				onChange={(e) => setText(e.target.value)}
 				placeholder="¿Cómo te sientes hoy? ¡Comparte tu logro!"
 			/>
-			{/* <input type="file" onChange={(e) => setImage(e.target.files[0])} /> */}
+
 			<button type="submit">Publicar</button>
 		</form>
 	);

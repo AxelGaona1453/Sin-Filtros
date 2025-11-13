@@ -13,24 +13,23 @@ function Sidebar() {
 			<div className="sidebar-logo">Sin-Filtros</div>
 
 			<ul className="sidebar-nav">
-				{/* Usamos 'a' por ahora, en el futuro será <Link> de React Router */}
-				<li className="nav-item active">
-					<a href="#">
+				<li className="nav-item">
+					<a href="/community">
 						<FaHome size={24} /> <span>Comunidad</span>
 					</a>
 				</li>
 				<li className="nav-item">
-					<a href="#">
+					<a href="/explore">
 						<FaCompass size={24} /> <span>Explorar</span>
 					</a>
 				</li>
 				<li className="nav-item">
-					<a href="#">
+					<a href="/progress">
 						<FaRegHeart size={24} /> <span>Mi Progreso</span>
 					</a>
 				</li>
 				<li className="nav-item">
-					<a href="#">
+					<a href="/profile">
 						<FaUserCircle size={24} /> <span>Perfil</span>
 					</a>
 				</li>

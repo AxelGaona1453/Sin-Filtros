@@ -5,7 +5,7 @@ import './CommunityFeed.css';
 import CreatePostForm from './CreatePostForm';
 import PostList from './PostList';
 
-const MOCK_POSTS = [
+export const MOCK_POSTS = [
 	{
 		id: 1,
 		author: 'UsuarioEjemplo',
@@ -38,11 +38,9 @@ function CommunityFeed() {
 			avatar: img1,
 			comments: [],
 		};
-		// Agregamos el nuevo post al principio del feed
 		setPosts([newPost, ...posts]);
 	};
 
-	// Función para agregar un nuevo comentario a un post específico
 	const handleNewComment = (postId, commentText) => {
 		setPosts(
 			posts.map((post) => {
