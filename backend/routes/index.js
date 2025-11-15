@@ -3,6 +3,7 @@ import { authRoutes } from "./auth.routes.js";
 import { postRoutes } from "./post.routes.js";
 import { aiRoutes } from "./ai.routes.js";
 import { notificationsRoutes } from "./notifications.routes.js";
+import { emailRoutes } from "./email.routes.js";
 
 // Router principal
 export const routes = Router();
@@ -15,3 +16,5 @@ routes.use(postRoutes);
 routes.use(aiRoutes);
 // Rutas Notificaciones
 routes.use(notificationsRoutes)
+// Rutas Correos
+routes.use(emailRoutes)
