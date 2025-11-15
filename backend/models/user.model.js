@@ -51,6 +51,10 @@ const UserSchema = new Schema(
                 ref: 'Post'
             }
         ],
+        device_tokens: {
+            type: [String],
+            default: [],
+        }
     },
     {
         timestamps: true,
