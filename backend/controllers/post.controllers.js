@@ -2,7 +2,7 @@ import { CommentModel } from "../models/comment.model.js"
 import { PostModel } from "../models/post.model.js"
 import { matchedData } from "express-validator"
 import { UserModel } from "../models/user.model.js"
-import { uploadFromBuffer,deleteFileByUrl } from "../helpers/cloudinary.helper.js"
+import { uploadFromBuffer, deleteFileByUrl } from "../helpers/cloudinary.helper.js"
 
 
 export const createPost = async (req, res) => {
@@ -48,6 +48,14 @@ export const getAllPosts = async (req, res) => {
     try {
         const posts = await PostModel.find()
             .populate('author', 'username profile.profile_picture')
+            .populate({
+                path: "comments",
+                populate: {
+                    path: "author",
+                    select: "username profile.profile_picture"
+                }
+            })
+
             .sort({ createdAt: -1 });
 
         res.status(200).json({
