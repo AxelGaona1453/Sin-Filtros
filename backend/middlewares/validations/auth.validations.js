@@ -8,8 +8,6 @@ export const registerValidations = [
     .withMessage("El nombre de usuario es obligatorio")
     .isLength({ min: 3, max: 20 })
     .withMessage("El nombre de usuario debe tener entre 3 y 20 caracteres")
-    .isAlphanumeric()
-    .withMessage("El nombre de usuario debe ser alfanumérico")
     .custom(async (username) => {
       const usernameExists = await UserModel.findOne({ username: username });
       if (usernameExists) {
@@ -67,10 +65,11 @@ export const updateAuthProfileValidations = [
     .withMessage("El nombre de usuario es obligatorio")
     .isLength({ min: 3, max: 20 })
     .withMessage("El nombre de usuario debe tener entre 3 y 20 caracteres")
-    .isAlphanumeric()
-    .withMessage("El nombre de usuario debe ser alfanumérico")
-    .custom(async (username) => {
-      const usernameExists = await UserModel.findOne({ username: username });
+    .custom(async (username, {req}) => {
+      const currentIdUser = req.usuarioLogueado.id;
+      const usernameExists = await UserModel.findOne({ username: username,
+        _id: {$ne: currentIdUser}
+       });
       if (usernameExists) {
         throw new Error("El nombre de usuario ya está en uso");
       }
