@@ -61,6 +61,20 @@ export const registerValidations = [
 
 // Validaciones para la actualización del perfil del usuario autenticado
 export const updateAuthProfileValidations = [
+  body("username")
+    .optional()
+    .notEmpty()
+    .withMessage("El nombre de usuario es obligatorio")
+    .isLength({ min: 3, max: 20 })
+    .withMessage("El nombre de usuario debe tener entre 3 y 20 caracteres")
+    .isAlphanumeric()
+    .withMessage("El nombre de usuario debe ser alfanumérico")
+    .custom(async (username) => {
+      const usernameExists = await UserModel.findOne({ username: username });
+      if (usernameExists) {
+        throw new Error("El nombre de usuario ya está en uso");
+      }
+    }),
   body("profile.firstname")
     .optional()
     .notEmpty()
