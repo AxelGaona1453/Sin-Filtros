@@ -78,10 +78,7 @@ export const updateAuthProfileValidations = [
     .trim(),
 
   body("profile.profile_picture")
-    .optional()
-    .isURL()
-    .withMessage("La URL de la imagen de perfil debe ser válida"),
-
+    .optional(),
   body("profile.biography")
     .optional()
     .isLength({ max: 500 })

@@ -1,4 +1,5 @@
 import { comparePassword, hashPassword } from "../helpers/bcrypt.helper.js";
+import { deleteFileByUrl, uploadFromBuffer } from "../helpers/cloudinary.helper.js";
 import { generateToken } from "../helpers/jwt.helper.js";
 import { UserModel } from "../models/user.model.js";
 import { matchedData } from "express-validator"
@@ -121,7 +122,22 @@ export const updateAuthProfile = async (req, res) => {
 
         // Obtener el usuario logueado
         const usuarioLogueado = req.usuarioLogueado;
+        if (req.file) {
+            // Obtener el usuario actual para eliminar la imagen anterior si existe
+            const user = await UserModel.findById(usuarioLogueado.id);
 
+            if (user.profile?.profile_picture) {
+                console.log("Eliminando imagen anterior de perfil");
+                await deleteFileByUrl(user.profile.profile_picture);
+            }
+
+            // Subir la nueva imagen a cloudinary
+            const result = await uploadFromBuffer(req.file.buffer);
+
+            // Agregar la URL de la nueva imagen a los datos
+            if (!data.profile) data.profile = {};
+            data.profile.profile_picture = result.secure_url;
+        }
         // Actualizar el perfil del usuario
         const updatedProfile = await UserModel.findByIdAndUpdate(
             usuarioLogueado.id,
